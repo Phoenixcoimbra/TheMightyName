@@ -1,5 +1,6 @@
 import React from 'react';
 import { ShoppingBag, Zap } from 'lucide-react';
+import Info from './Info';
 
 const Storefront = ({ products, onPurchase }) => {
   return (
@@ -35,8 +36,14 @@ const Storefront = ({ products, onPurchase }) => {
           </div>
         ))}
       </section>
+      <section>
+        {/* Your product grid ends here */}
+      </section>
+
+      <Info /> {/* This adds the About/Rewards section */}
     </div>
   );
 };
+  
 
 export default Storefront;
