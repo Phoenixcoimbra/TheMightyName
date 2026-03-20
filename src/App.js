@@ -6,12 +6,25 @@ import Impact from './components/Impact';
 function App() {
   const [view, setView] = useState(window.location.pathname);
   
-  // INITIAL LOAD: Look in the browser's "Safe" for existing data
+  // 1. PERSISTENCE: Look for saved products (including their Postimages links)
   const [products, setProducts] = useState(() => {
     const saved = localStorage.getItem('mighty_products');
     return saved ? JSON.parse(saved) : [
-      { id: 1, name: 'MIGHTY HOODIE', price: 85, color: 'Midnight Blue' },
-      { id: 2, name: 'CORE TEE', price: 45, color: 'Arctic White' },
+      { 
+        id: 1, 
+        name: 'MIGHTY HOODIE', 
+        price: 85, 
+        color: 'Midnight Blue',
+        // Example Postimages Direct Link format:
+        image: 'https://i.postimg.cc/example/hoodie-blue.jpg' 
+      },
+      { 
+        id: 2, 
+        name: 'CORE TEE', 
+        price: 45, 
+        color: 'Arctic White',
+        image: 'https://i.postimg.cc/example/tee-white.jpg'
+      }
     ];
   });
   
@@ -20,7 +33,7 @@ function App() {
     return saved ? JSON.parse(saved) : [];
   });
 
-  // AUTO-SAVE: Every time products or orders change, lock them into memory
+  // 2. SAVING: Keep the links in the browser memory
   useEffect(() => {
     localStorage.setItem('mighty_products', JSON.stringify(products));
   }, [products]);
@@ -29,7 +42,7 @@ function App() {
     localStorage.setItem('mighty_orders', JSON.stringify(orders));
   }, [orders]);
 
-  // URL Listener
+  // 3. NAVIGATION: Routing logic
   useEffect(() => {
     const handlePopState = () => setView(window.location.pathname);
     window.addEventListener('popstate', handlePopState);
@@ -48,7 +61,7 @@ function App() {
       date: new Date().toLocaleDateString()
     };
     setOrders([newOrder, ...orders]);
-    alert(`Order Confirmed: ${product.name} has been logged.`);
+    alert(`Mighty Choice! ${product.name} order received.`);
   };
 
   const renderContent = () => {
@@ -69,12 +82,14 @@ function App() {
       </main>
 
       <footer className="py-12 border-t border-slate-100 bg-white">
-        <div className="max-w-6xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6 text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">
-          <div>© 2026 THE MIGHTY NAME // GLOBAL OPERATIONS</div>
-          <nav className="flex gap-8 text-slate-600">
-            <a href="/" className="hover:text-mighty">Store</a>
-            <a href="/impact" className="hover:text-mighty">Impact</a>
-            <a href="mailto:contact@themightyname.com" className="hover:text-mighty text-slate-300">Contact</a>
+        <div className="max-w-6xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
+          <div className="text-[10px] font-black uppercase tracking-[0.5em] text-slate-400">
+            © 2026 THE MIGHTY NAME // ALL GLORY TO GOD
+          </div>
+          <nav className="flex gap-8 text-[10px] font-black uppercase tracking-widest text-slate-600">
+            <a href="/" className="hover:text-mighty transition-colors">Store</a>
+            <a href="/impact" className="hover:text-mighty transition-colors">Impact</a>
+            <a href="mailto:contact@themightyname.com" className="hover:text-mighty transition-colors">Contact</a>
           </nav>
         </div>
       </footer>
