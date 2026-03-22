@@ -1,18 +1,43 @@
-import React, { useState } from 'react';
-import { Plus, Package, DollarSign, ShoppingBag, Image as ImageIcon, Trash2, X } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Plus, Package, DollarSign, ShoppingBag, Image as ImageIcon, Trash2, X, Lock } from 'lucide-react';
 
 const Dashboard = ({ orders, products, setProducts }) => {
+  const [isAuthorized, setIsAuthorized] = useState(false);
+
+  // --- 🛡️ MIGHTY GATEKEEPER ---
+  useEffect(() => {
+    const MIGHTY_PASS = "MIGHTY2026"; // Set your desired password here
+    const isUnlocked = sessionStorage.getItem('vault_unlocked');
+
+    if (isUnlocked === 'true') {
+      setIsAuthorized(true);
+    } else {
+      const entry = prompt("ENTER ACCESS KEY TO OPEN THE VAULT:");
+      if (entry === MIGHTY_PASS) {
+        sessionStorage.setItem('vault_unlocked', 'true');
+        setIsAuthorized(true);
+      } else {
+        alert("UNAUTHORIZED ACCESS ATTEMPTED.");
+        window.location.href = "/"; 
+      }
+    }
+  }, []);
+
+  // State for the modal
   const [showNewDrop, setShowNewDrop] = useState(false);
   const [newName, setNewName] = useState('');
   const [newPrice, setNewPrice] = useState('');
   const [newImage, setNewImage] = useState('');
+
+  // Security: Stop rendering if not authorized
+  if (!isAuthorized) return null;
 
   const handleCreateDrop = (e) => {
     e.preventDefault();
     if (!newName || !newPrice) return;
 
     const newProduct = {
-      id: Date.now(), // Using timestamp for a unique ID
+      id: Date.now(),
       name: newName.toUpperCase(),
       price: parseFloat(newPrice),
       color: 'Original',
@@ -38,18 +63,26 @@ const Dashboard = ({ orders, products, setProducts }) => {
     <div className="p-8 bg-slate-50 min-h-screen font-sans">
       <div className="max-w-6xl mx-auto">
         
-        {/* Header */}
+        {/* Header with Logout */}
         <div className="flex justify-between items-end mb-12">
           <div>
             <h1 className="text-3xl font-black italic uppercase text-mighty-dark leading-none">Mighty Command</h1>
             <p className="text-[10px] font-bold text-slate-400 tracking-[0.3em] uppercase mt-2">Inventory & Revenue Management</p>
           </div>
-          <button 
-            onClick={() => setShowNewDrop(true)}
-            className="bg-mighty-dark text-white px-8 py-4 rounded-sm font-black uppercase text-[10px] tracking-[0.2em] flex items-center gap-2 hover:bg-black transition-all shadow-lg active:scale-95"
-          >
-            <Plus size={14} /> New Drop
-          </button>
+          <div className="flex gap-4">
+            <button 
+                onClick={() => { sessionStorage.removeItem('vault_unlocked'); window.location.href="/"; }}
+                className="border border-slate-200 bg-white text-slate-400 px-4 py-4 rounded-sm font-black uppercase text-[10px] tracking-[0.2em] flex items-center gap-2 hover:text-red-500 transition-all"
+            >
+                <Lock size={12} /> Lock
+            </button>
+            <button 
+                onClick={() => setShowNewDrop(true)}
+                className="bg-mighty-dark text-white px-8 py-4 rounded-sm font-black uppercase text-[10px] tracking-[0.2em] flex items-center gap-2 hover:bg-black transition-all shadow-lg active:scale-95"
+            >
+                <Plus size={14} /> New Drop
+            </button>
+          </div>
         </div>
 
         {/* Stats Grid */}

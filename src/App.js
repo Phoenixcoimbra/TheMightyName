@@ -6,7 +6,6 @@ import Impact from './components/Impact';
 function App() {
   const [view, setView] = useState(window.location.pathname);
   
-  // 1. PERSISTENCE: Look for saved products (including their Postimages links)
   const [products, setProducts] = useState(() => {
     const saved = localStorage.getItem('mighty_products');
     return saved ? JSON.parse(saved) : [
@@ -15,7 +14,6 @@ function App() {
         name: 'MIGHTY HOODIE', 
         price: 85, 
         color: 'Midnight Blue',
-        // Example Postimages Direct Link format:
         image: 'https://i.postimg.cc/example/hoodie-blue.jpg' 
       },
       { 
@@ -33,7 +31,6 @@ function App() {
     return saved ? JSON.parse(saved) : [];
   });
 
-  // 2. SAVING: Keep the links in the browser memory
   useEffect(() => {
     localStorage.setItem('mighty_products', JSON.stringify(products));
   }, [products]);
@@ -42,7 +39,6 @@ function App() {
     localStorage.setItem('mighty_orders', JSON.stringify(orders));
   }, [orders]);
 
-  // 3. NAVIGATION: Routing logic
   useEffect(() => {
     const handlePopState = () => setView(window.location.pathname);
     window.addEventListener('popstate', handlePopState);
@@ -66,7 +62,7 @@ function App() {
 
   const renderContent = () => {
     switch (view) {
-      case '/admin':
+      case '/mighty-vault-99':
         return <Dashboard orders={orders} products={products} setProducts={setProducts} />;
       case '/impact':
         return <Impact impactAmount={impactAmount} />;
@@ -89,7 +85,7 @@ function App() {
           <nav className="flex gap-8 text-[10px] font-black uppercase tracking-widest text-slate-600">
             <a href="/" className="hover:text-mighty transition-colors">Store</a>
             <a href="/impact" className="hover:text-mighty transition-colors">Impact</a>
-            <a href="mailto:contact@themightyname.com" className="hover:text-mighty transition-colors">Contact</a>
+            <a href="mailto:support@themightyname.com" className="hover:text-mighty transition-colors">Contact</a>
           </nav>
         </div>
       </footer>
