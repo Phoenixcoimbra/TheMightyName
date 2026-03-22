@@ -1,11 +1,16 @@
 import React, { useState, useEffect } from 'react';
+import { loadStripe } from '@stripe/stripe-js';
 import Storefront from './components/Storefront';
 import Dashboard from './components/Dashboard';
 import Impact from './components/Impact';
 
+// INITIALIZE STRIPE (Replace with your actual Public Key from Stripe Dashboard)
+const stripePromise = loadStripe('pk_test_51TDhGQ0229WQ63FBaM86MT50ZVI4AVfmSa0w3l2jBAOzM7XMM0mqItc24TI8mVZ8jIEnMJmOMxp3TI3IcZyNxwjD00JCfHfkMA');
+
 function App() {
   const [view, setView] = useState(window.location.pathname);
   
+  // 1. PERSISTENCE: Includes Stripe Price IDs for the checkout
   const [products, setProducts] = useState(() => {
     const saved = localStorage.getItem('mighty_products');
     return saved ? JSON.parse(saved) : [
@@ -14,14 +19,16 @@ function App() {
         name: 'MIGHTY HOODIE', 
         price: 85, 
         color: 'Midnight Blue',
-        image: 'https://i.postimg.cc/example/hoodie-blue.jpg' 
+        image: 'https://i.postimg.cc/example/hoodie-blue.jpg',
+        stripePriceId: 'price_123_EXAMPLE_HOODIE' // Add these from Stripe Dashboard
       },
       { 
         id: 2, 
         name: 'CORE TEE', 
         price: 45, 
         color: 'Arctic White',
-        image: 'https://i.postimg.cc/example/tee-white.jpg'
+        image: 'https://i.postimg.cc/example/tee-white.jpg',
+        stripePriceId: 'price_123_EXAMPLE_TEE'
       }
     ];
   });
@@ -31,6 +38,7 @@ function App() {
     return saved ? JSON.parse(saved) : [];
   });
 
+  // 2. SAVING DATA
   useEffect(() => {
     localStorage.setItem('mighty_products', JSON.stringify(products));
   }, [products]);
@@ -39,6 +47,7 @@ function App() {
     localStorage.setItem('mighty_orders', JSON.stringify(orders));
   }, [orders]);
 
+  // 3. NAVIGATION logic
   useEffect(() => {
     const handlePopState = () => setView(window.location.pathname);
     window.addEventListener('popstate', handlePopState);
@@ -48,16 +57,31 @@ function App() {
   const totalRevenue = orders.reduce((sum, order) => sum + order.price, 0);
   const impactAmount = (totalRevenue * 0.10).toFixed(2);
 
-  const addOrder = (product) => {
-    const newOrder = {
-      id: `MN-${Math.floor(Math.random() * 9000) + 1000}`,
-      item: product.name,
-      price: product.price,
-      status: 'Processing',
-      date: new Date().toLocaleDateString()
-    };
-    setOrders([newOrder, ...orders]);
-    alert(`Mighty Choice! ${product.name} order received.`);
+  // 4. THE STRIPE CHECKOUT LOGIC
+  const addOrder = async (product) => {
+    const stripe = await stripePromise;
+
+    // Check if Stripe is configured
+    if (!product.stripePriceId) {
+      alert("This item isn't linked to Stripe yet. Add a Price ID in the Dashboard.");
+      return;
+    }
+
+    // Redirect to Stripe's Secure Checkout Page
+    const { error } = await stripe.redirectToCheckout({
+      lineItems: [{
+        price: product.stripePriceId,
+        quantity: 1,
+      }],
+      mode: 'payment',
+      successUrl: `${window.location.origin}/?payment=success`,
+      cancelUrl: `${window.location.origin}/`,
+    });
+
+    if (error) {
+      console.error("Stripe Error:", error.message);
+      alert("Checkout failed. Please try again.");
+    }
   };
 
   const renderContent = () => {
