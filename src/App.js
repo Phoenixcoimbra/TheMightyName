@@ -4,33 +4,42 @@ import Storefront from './components/Storefront';
 import Dashboard from './components/Dashboard';
 import Impact from './components/Impact';
 
-// INITIALIZE STRIPE (Replace with your actual Public Key from Stripe Dashboard)
+// 1. STRIPE INITIALIZATION
+// Make sure you have run: npm install @stripe/stripe-js
 const stripePromise = loadStripe('pk_test_51TDhGQ0229WQ63FBaM86MT50ZVI4AVfmSa0w3l2jBAOzM7XMM0mqItc24TI8mVZ8jIEnMJmOMxp3TI3IcZyNxwjD00JCfHfkMA');
 
 function App() {
   const [view, setView] = useState(window.location.pathname);
   
-  // 1. PERSISTENCE: Includes Stripe Price IDs for the checkout
+  // 2. PRODUCT STATE (Prioritizes hard-coded IDs for new builds)
   const [products, setProducts] = useState(() => {
-    const saved = localStorage.getItem('mighty_products');
-    return saved ? JSON.parse(saved) : [
+    const hardCoded = [
       { 
         id: 1, 
         name: 'MIGHTY HOODIE', 
         price: 85, 
         color: 'Midnight Blue',
-        image: 'https://i.postimg.cc/example/hoodie-blue.jpg',
-        stripePriceId: 'price_123_EXAMPLE_HOODIE' // Add these from Stripe Dashboard
+        image: 'https://i.postimg.cc/w3KPVc4z/Gemini_Generated_Image_80kffb80kffb80kf.png',
+        stripePriceId: 'price_1TDhrx0229WQ63FBYoWhTrLR' // REPLACE WITH YOUR ACTUAL TEST PRICE ID
       },
       { 
         id: 2, 
-        name: 'CORE TEE', 
+        name: 'TMN CAP', 
         price: 45, 
         color: 'Arctic White',
-        image: 'https://i.postimg.cc/example/tee-white.jpg',
-        stripePriceId: 'price_123_EXAMPLE_TEE'
+        image: 'https://i.postimg.cc/T1xTQ5tg/2d433420_243d_11f1_ab29_01c105d570ac.png',
+        stripePriceId: 'price_123_EXAMPLE_CAP' // REPLACE WITH YOUR ACTUAL TEST PRICE ID
       }
     ];
+
+    const saved = localStorage.getItem('mighty_products');
+    if (saved) {
+      const parsedSaved = JSON.parse(saved);
+      // Merges saved Dashboard "Drops" with the Hard-coded items above
+      const newDrops = parsedSaved.filter(sp => !hardCoded.find(hp => hp.id === sp.id));
+      return [...hardCoded, ...newDrops];
+    }
+    return hardCoded;
   });
   
   const [orders, setOrders] = useState(() => {
@@ -38,7 +47,17 @@ function App() {
     return saved ? JSON.parse(saved) : [];
   });
 
-  // 2. SAVING DATA
+  // 3. SUCCESS MESSAGE LOGIC
+  // Checks URL for ?payment=success after Stripe redirects back
+  useEffect(() => {
+    const query = new URLSearchParams(window.location.search);
+    if (query.get('payment') === 'success') {
+      alert("MIGHTY SUCCESS! Order received. Check your email for confirmation.");
+      window.history.replaceState({}, document.title, "/");
+    }
+  }, []);
+
+  // 4. PERSISTENCE
   useEffect(() => {
     localStorage.setItem('mighty_products', JSON.stringify(products));
   }, [products]);
@@ -47,7 +66,7 @@ function App() {
     localStorage.setItem('mighty_orders', JSON.stringify(orders));
   }, [orders]);
 
-  // 3. NAVIGATION logic
+  // 5. NAVIGATION
   useEffect(() => {
     const handlePopState = () => setView(window.location.pathname);
     window.addEventListener('popstate', handlePopState);
@@ -57,17 +76,17 @@ function App() {
   const totalRevenue = orders.reduce((sum, order) => sum + order.price, 0);
   const impactAmount = (totalRevenue * 0.10).toFixed(2);
 
-  // 4. THE STRIPE CHECKOUT LOGIC
+  // 6. STRIPE CHECKOUT ACTION
   const addOrder = async (product) => {
     const stripe = await stripePromise;
 
-    // Check if Stripe is configured
-    if (!product.stripePriceId) {
-      alert("This item isn't linked to Stripe yet. Add a Price ID in the Dashboard.");
+    // Safety check: Prevent redirect if ID is missing or placeholder
+    if (!product.stripePriceId || product.stripePriceId.includes('EXAMPLE')) {
+      alert(`ERROR: No valid Stripe Price ID found for ${product.name}. \n\nPlease update the ID in App.js or the Dashboard.`);
       return;
     }
 
-    // Redirect to Stripe's Secure Checkout Page
+    // Attempt the redirect
     const { error } = await stripe.redirectToCheckout({
       lineItems: [{
         price: product.stripePriceId,
@@ -80,7 +99,7 @@ function App() {
 
     if (error) {
       console.error("Stripe Error:", error.message);
-      alert("Checkout failed. Please try again.");
+      alert("STRIPE ERROR: " + error.message);
     }
   };
 
