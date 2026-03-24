@@ -17,13 +17,13 @@ function App() {
       id: 1, 
       name: 'MIGHTY HOODIE', 
       price: 85, 
-      stripePriceId: 'prod_UD3QSRmiUrvU5S' // Your Actual ID
+      stripePriceId: 'price_1TEdK10229WQ63FBSQFaaGkT' // Your Actual ID
     },
     { 
       id: 2, 
       name: 'MIGHTY CAP', 
       price: 35, 
-      stripePriceId: 'prod_UD3joXdd5C142O' // Your Actual ID
+      stripePriceId: 'price_1TEdcR0229WQ63FB9KLLFiRW' // Your Actual ID
     }
   ]);
 
