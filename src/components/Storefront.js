@@ -117,12 +117,13 @@ const Storefront = ({ products, onCheckout }) => {
                 <span>Subtotal</span>
                 <span>${cartTotal.toFixed(2)}</span>
               </div>
-              <button 
-                onClick={() => onCheckout(cart)}
-                className="w-full bg-mighty-dark text-white py-6 font-black uppercase text-[12px] tracking-[0.4em] hover:bg-black transition-all shadow-xl"
-              >
-                Secure Checkout
-              </button>
+              <button
+  onClick={() => onCheckout(cart)}
+  disabled={cart.length === 0}
+  className="w-full bg-mighty-dark text-white py-6 font-black uppercase text-[12px] tracking-[0.4em] hover:bg-black transition-all shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
+>
+  Secure Checkout
+</button>
             </div>
           </div>
         </div>
