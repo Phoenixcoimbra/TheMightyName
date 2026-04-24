@@ -14,7 +14,7 @@ function App() {
       name: 'MIGHTY HOODIE',
       price: 85,
       stripePriceId: 'price_1TEdK10229WQ63FBSQFaaGkT',
-      image: 'https://via.placeholder.com/600x800?text=Mighty+Hoodie',
+      image: 'https://themightyname.com/images/mighty-hoodie.png',
       color: 'Original',
     },
     {
@@ -22,24 +22,18 @@ function App() {
       name: 'MIGHTY CAP',
       price: 35,
       stripePriceId: 'price_1TEdcR0229WQ63FB9KLLFiRW',
-      image: 'https://via.placeholder.com/600x800?text=Mighty+Cap',
+      image: 'https://themightyname.com/images/mighty-cap.png',
+      color: 'Original',
+    },
+    {
+      id: 3,
+      name: 'MIGHTY TEE',
+      price: 45,
+      stripePriceId: 'price_YOUR_STRIPE_PRICE_ID',
+      image: 'https://themightyname.com/images/mighty-tee.jpg',
       color: 'Original',
     },
   ]);
-
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const paymentStatus = params.get('payment');
-
-    if (paymentStatus === 'success') {
-      setCart([]);
-      localStorage.removeItem('mighty_cart');
-      setShowSuccessPopup(true);
-
-      const cleanUrl = window.location.pathname;
-      window.history.replaceState({}, document.title, cleanUrl);
-    }
-  }, []);
 
   useEffect(() => {
     const savedCart = localStorage.getItem('mighty_cart');
@@ -55,6 +49,25 @@ function App() {
   useEffect(() => {
     localStorage.setItem('mighty_cart', JSON.stringify(cart));
   }, [cart]);
+
+  useEffect(() => {
+    const path = window.location.pathname;
+    setTimeout(() => {}, 0);
+
+    if (path === '/impact') return;
+
+    const params = new URLSearchParams(window.location.search);
+    const paymentStatus = params.get('payment');
+
+    if (paymentStatus === 'success') {
+      setCart([]);
+      localStorage.removeItem('mighty_cart');
+      setShowSuccessPopup(true);
+
+      const cleanUrl = window.location.pathname;
+      window.history.replaceState({}, document.title, cleanUrl);
+    }
+  }, []);
 
   const handleCheckout = async (cartItems) => {
     try {
@@ -100,6 +113,12 @@ function App() {
   };
 
   const renderContent = () => {
+    const currentPath = window.location.pathname;
+
+    if (currentPath === '/impact') {
+      return <Impact impactAmount="0.00" />;
+    }
+
     switch (view) {
       case '/mighty-vault-99':
         return (
@@ -110,16 +129,13 @@ function App() {
           />
         );
 
-      case '/impact':
-        return <Impact impactAmount="0.00" />;
-
       default:
         return (
           <Storefront
             products={products}
+            onCheckout={handleCheckout}
             cart={cart}
             setCart={setCart}
-            onCheckout={handleCheckout}
           />
         );
     }
@@ -127,51 +143,94 @@ function App() {
 
   return (
     <div
-      className="App"
-      style={{ backgroundColor: '#000', color: '#fff', minHeight: '100vh' }}
+      className="App bg-mighty-black text-white min-h-screen"
+      style={{ backgroundColor: '#050505', color: '#fff', minHeight: '100vh' }}
     >
       {renderContent()}
 
       {showSuccessPopup && (
-        <div className="fixed inset-0 z-[200] flex items-center justify-center p-6">
+        <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 md:p-6">
           <div
-            className="absolute inset-0 bg-black/80 backdrop-blur-sm"
+            className="absolute inset-0 bg-black/85 backdrop-blur-sm"
             onClick={() => setShowSuccessPopup(false)}
           />
 
-          <div className="relative z-10 w-full max-w-lg bg-white text-mighty-dark p-10 md:p-12 shadow-2xl border border-slate-200 text-center">
-            <p className="text-[10px] font-black uppercase tracking-[0.5em] text-mighty mb-4 italic">
-              Payment Complete
-            </p>
+          <div className="relative z-10 w-full max-w-2xl border border-white/10 bg-mighty-black text-white shadow-2xl overflow-hidden">
+            <div className="absolute inset-0 opacity-[0.05] pointer-events-none">
+              <div className="h-full w-full bg-[linear-gradient(to_right,rgba(255,255,255,0.06)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.06)_1px,transparent_1px)] bg-[size:34px_34px]" />
+            </div>
 
-            <h2 className="text-4xl md:text-5xl font-black italic uppercase leading-none tracking-tighter mb-6">
-              Thank You
-            </h2>
+            <div className="relative z-10 p-8 md:p-12">
+              <div className="flex flex-wrap gap-3 mb-8">
+                <span className="border border-mighty bg-mighty/10 px-4 py-2 text-[9px] font-black uppercase tracking-brand text-mighty">
+                  Order Confirmed
+                </span>
+                <span className="border border-white/10 bg-white/5 px-4 py-2 text-[9px] font-black uppercase tracking-brand text-white/55">
+                  TMN Checkout
+                </span>
+              </div>
 
-            <div className="h-1.5 w-20 bg-mighty mx-auto mb-8"></div>
+              <div className="grid md:grid-cols-[1.15fr_0.85fr] gap-10 items-end">
+                <div>
+                  <p className="text-[11px] font-black uppercase tracking-[0.45em] text-white/35 mb-4">
+                    The Mighty Name
+                  </p>
 
-            <p className="text-slate-600 font-medium text-lg leading-relaxed mb-6">
-              Your order was placed successfully.
-            </p>
+                  <h2 className="text-4xl md:text-6xl font-black italic uppercase tracking-tighter leading-[0.88] text-white">
+                    Thank You
+                    <br />
+                    For Backing
+                    <br />
+                    The Mission.
+                  </h2>
 
-            <p className="text-slate-500 font-bold italic mb-10">
-              Thank you for supporting The Mighty Name. 10% of your purchase helps fuel the mission.
-            </p>
+                  <p className="mt-6 max-w-xl text-sm md:text-base font-medium leading-relaxed text-white/65">
+                    Your order was placed successfully. Thank you for supporting a Christian cultural clothing brand rooted in the Kingdom.
+                  </p>
 
-            <div className="flex flex-col sm:flex-row gap-4">
-              <button
-                onClick={() => setShowSuccessPopup(false)}
-                className="flex-1 bg-mighty-dark text-white py-4 font-black uppercase text-[11px] tracking-[0.3em] hover:bg-black transition-all"
-              >
-                Continue Shopping
-              </button>
+                  <div className="mt-8 border-l-2 border-mighty pl-4">
+                    <p className="text-[10px] font-black uppercase tracking-micro text-white/45">
+                      10% of your order helps fund real impact.
+                    </p>
+                  </div>
+                </div>
 
-              <a
-                href="/impact"
-                className="flex-1 border border-slate-200 py-4 font-black uppercase text-[11px] tracking-[0.3em] hover:border-mighty hover:text-mighty transition-all"
-              >
-                View Impact
-              </a>
+                <div className="grid gap-4">
+                  <div className="border border-white/10 bg-white/[0.03] p-5">
+                    <p className="text-[8px] font-black uppercase tracking-brand text-white/35 mb-2">
+                      Status
+                    </p>
+                    <p className="text-lg font-black italic uppercase text-white">
+                      Payment Complete
+                    </p>
+                  </div>
+
+                  <div className="border border-mighty bg-mighty/10 p-5">
+                    <p className="text-[8px] font-black uppercase tracking-brand text-mighty mb-2">
+                      Identity
+                    </p>
+                    <p className="text-[10px] font-black uppercase tracking-micro text-white leading-relaxed">
+                      Conviction worn publicly.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="mt-10 flex flex-col sm:flex-row gap-4">
+                <button
+                  onClick={() => setShowSuccessPopup(false)}
+                  className="flex-1 bg-mighty text-black py-5 font-black uppercase text-[11px] tracking-brand hover:bg-white transition-all"
+                >
+                  Continue Shopping
+                </button>
+
+                <a
+                  href="/impact"
+                  className="flex-1 border border-white/15 py-5 text-center font-black uppercase text-[11px] tracking-brand text-white hover:border-mighty hover:text-mighty transition-all"
+                >
+                  View Impact
+                </a>
+              </div>
             </div>
           </div>
         </div>

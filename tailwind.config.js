@@ -5,11 +5,16 @@ module.exports = {
     extend: {
       colors: {
         mighty: {
-          light: '#eff6ff', // Ice Blue
-          DEFAULT: '#1d4ed8', // Primary Blue
-          dark: '#1e3a8a', // Deep Navy
-          black: '#030712', // Near Black for contrast
+          light: '#F5F2EA',
+          DEFAULT: '#84cc16',
+          dark: '#050505',
+          black: '#050505',
+          gray: '#2A2A2A',
         },
+      },
+      letterSpacing: {
+        brand: '0.35em',
+        micro: '0.25em',
       },
     },
   },

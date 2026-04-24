@@ -1,85 +1,152 @@
 import React from 'react';
-import { Heart, Globe, TrendingUp, Zap } from 'lucide-react';
+import { TrendingUp, Globe, ShieldCheck, ArrowLeft, Sparkles } from 'lucide-react';
 
-const Impact = ({ impactAmount }) => {
+const Impact = ({ impactAmount = '0.00' }) => {
   return (
-    <div className="bg-slate-50 min-h-screen py-24 px-6">
-      <div className="max-w-4xl mx-auto">
-        
-        {/* Header */}
-        <div className="text-center mb-20">
-          <h1 className="text-5xl font-black italic uppercase text-mighty-dark mb-4 tracking-tighter">The 10% Pledge</h1>
-          <div className="h-2 w-24 bg-mighty mx-auto mb-8"></div>
-          <p className="text-xl text-slate-600 font-bold italic uppercase tracking-tight">
-            Mighty Power for a Mighty Cause.
-          </p>
+    <div className="bg-white text-black min-h-screen">
+      <section className="relative border-b border-black/10 overflow-hidden">
+        <div className="absolute inset-0 opacity-[0.05] pointer-events-none">
+          <div className="h-full w-full bg-[linear-gradient(to_right,rgba(0,0,0,0.06)_1px,transparent_1px),linear-gradient(to_bottom,rgba(0,0,0,0.06)_1px,transparent_1px)] bg-[size:42px_42px]" />
         </div>
 
-        {/* The Breakdown Grid */}
-        <div className="grid md:grid-cols-2 gap-8 mb-16">
-          <div className="bg-white p-10 rounded-2xl shadow-sm border border-slate-200">
-            <Heart className="text-mighty mb-6" size={32} />
-            <h3 className="text-xl font-black italic uppercase mb-4">Why we give</h3>
-            <p className="text-slate-600 leading-relaxed font-medium">
-              We believe a brand is only as strong as the community it supports. 
-              The Mighty Name isn't just about apparel; it's about providing 
-              the resources for others to find their own strength.
+        <div className="relative z-10 max-w-7xl mx-auto px-6 pt-32 pb-20">
+          <div className="grid lg:grid-cols-[1.05fr_0.95fr] gap-14 items-end">
+            <div>
+              <div className="flex flex-wrap gap-3 mb-8">
+                <span className="border border-mighty bg-mighty/10 px-4 py-2 text-[9px] font-black uppercase tracking-brand text-mighty">
+                  TMN Impact
+                </span>
+                <span className="border border-black/10 bg-black/[0.03] px-4 py-2 text-[9px] font-black uppercase tracking-brand text-black/55">
+                  10% Pledge
+                </span>
+              </div>
+
+              <h1 className="text-5xl md:text-7xl lg:text-[7.5rem] font-black italic uppercase tracking-tighter leading-[0.86] text-black">
+                Backing
+                <br />
+                Real Mission.
+              </h1>
+
+              <p className="mt-8 max-w-2xl text-sm md:text-base font-bold uppercase tracking-[0.18em] text-black/60 leading-relaxed">
+                Every order fuels practical generosity, community support, and Kingdom-minded impact.
+              </p>
+            </div>
+
+            <div className="grid gap-4">
+              <div className="border border-black/10 bg-black/[0.02] p-6">
+                <p className="text-[8px] font-black uppercase tracking-brand text-black/35 mb-3">
+                  Impact Fund
+                </p>
+
+                <div className="flex items-end gap-3">
+                  <span className="text-5xl md:text-6xl font-black italic text-black">
+                    ${impactAmount}
+                  </span>
+                </div>
+
+                <p className="mt-4 text-[10px] font-black uppercase tracking-micro text-mighty">
+                  Raised To Date
+                </p>
+              </div>
+
+              <div className="border border-mighty bg-mighty/10 p-6">
+                <div className="flex items-center gap-3 mb-3">
+                  <Sparkles size={16} className="text-mighty" />
+                  <p className="text-[9px] font-black uppercase tracking-brand text-mighty">
+                    TMN Promise
+                  </p>
+                </div>
+                <p className="text-[11px] font-black uppercase tracking-micro text-black leading-relaxed">
+                  10% of every order is set apart for impact.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="max-w-7xl mx-auto px-6 py-20 md:py-24">
+        <div className="grid lg:grid-cols-[0.9fr_1.1fr] gap-10">
+          <div className="border border-black/10 bg-black/[0.02] p-8">
+            <div className="flex items-center gap-3 mb-6">
+              <TrendingUp className="text-mighty" size={22} />
+              <p className="text-[10px] font-black uppercase tracking-brand text-mighty">
+                Why It Matters
+              </p>
+            </div>
+
+            <h2 className="text-3xl md:text-4xl font-black italic uppercase tracking-tighter leading-[0.9] text-black mb-6">
+              Style With
+              <br />
+              Substance.
+            </h2>
+
+            <p className="text-black/65 leading-relaxed font-medium mb-5">
+              TMN is not built to sell product without purpose. Every piece carries message, and every order helps move that mission beyond clothing.
+            </p>
+
+            <p className="text-black/55 leading-relaxed font-medium">
+              We believe excellence, generosity, and witness can live together. The impact fund exists to make that visible.
             </p>
           </div>
 
-          {/* LIVE TRACKER CARD */}
-          <div className="bg-mighty-dark p-10 rounded-2xl text-white shadow-xl relative overflow-hidden">
-            <div className="relative z-10">
-              <TrendingUp className="text-blue-300 mb-6" size={32} />
-              <h3 className="text-xl font-black italic uppercase mb-2">The Impact Fund</h3>
-              <p className="text-blue-200 text-sm mb-6 font-bold italic">10% of every sale goes here.</p>
-              
-              <div className="flex items-baseline gap-2">
-                <span className="text-5xl font-black text-white italic">${impactAmount}</span>
-                <span className="text-blue-400 text-xs font-black uppercase tracking-widest">Raised to date</span>
+          <div className="grid gap-4">
+            <div className="border border-black/10 bg-black/[0.02] p-7">
+              <div className="flex items-center gap-3 mb-4">
+                <ShieldCheck className="text-mighty" size={18} />
+                <p className="text-[10px] font-black uppercase tracking-brand text-mighty">
+                  Community Support
+                </p>
               </div>
-              
-              <div className="mt-6 flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-blue-300">
-                <Zap size={12} className="fill-blue-300" />
-                <span>Live Tracking Active</span>
-              </div>
+              <p className="text-black/65 leading-relaxed font-medium">
+                Direct support for practical needs, community-led care, and people who need help in tangible ways.
+              </p>
             </div>
-            
-            {/* Background Decoration */}
-            <div className="absolute -bottom-4 -right-4 opacity-5 text-white">
-                <TrendingUp size={160} />
+
+            <div className="border border-black/10 bg-black/[0.02] p-7">
+              <div className="flex items-center gap-3 mb-4">
+                <Globe className="text-mighty" size={18} />
+                <p className="text-[10px] font-black uppercase tracking-brand text-mighty">
+                  Kingdom Initiatives
+                </p>
+              </div>
+              <p className="text-black/65 leading-relaxed font-medium">
+                Support for work that reflects the heart of Christ through outreach, service, generosity, and mission-minded action.
+              </p>
+            </div>
+
+            <div className="border border-mighty bg-mighty/10 p-7">
+              <p className="text-[10px] font-black uppercase tracking-brand text-mighty mb-4">
+                TMN Standard
+              </p>
+              <p className="text-black font-black uppercase tracking-micro leading-relaxed">
+                Every order should carry meaning beyond itself.
+              </p>
             </div>
           </div>
         </div>
+      </section>
 
-        {/* Accountability Section */}
-        <section className="bg-white border-2 border-mighty-dark p-12 rounded-2xl text-center">
-            <Globe className="mx-auto mb-6 text-mighty-dark" size={40} />
-            <h2 className="text-2xl font-black italic uppercase mb-6">How the funds help</h2>
-            <div className="space-y-4 text-left max-w-lg mx-auto italic font-bold text-slate-700">
-                <div className="flex gap-4 items-start border-b border-slate-100 pb-4">
-                    <span className="text-mighty">01.</span>
-                    <p>Direct aid to community-led social initiatives.</p>
-                </div>
-                <div className="flex gap-4 items-start border-b border-slate-100 pb-4">
-                    <span className="text-mighty">02.</span>
-                    <p>Funding for emerging creative talent in urban areas.</p>
-                </div>
-                <div className="flex gap-4 items-start">
-                    <span className="text-mighty">03.</span>
-                    <p>Environmental restoration and sustainable textile research.</p>
-                </div>
-            </div>
-        </section>
+      <section className="border-t border-black/10">
+        <div className="max-w-7xl mx-auto px-6 py-10 flex flex-col sm:flex-row gap-4 sm:items-center sm:justify-between">
+          <div>
+            <p className="text-[9px] font-black uppercase tracking-brand text-black/35 mb-2">
+              The Mighty Name
+            </p>
+            <p className="text-sm font-bold uppercase tracking-micro text-black/60">
+              Rooted in the Kingdom. Built for the called.
+            </p>
+          </div>
 
-        {/* Back to Store link for easy navigation */}
-        <div className="mt-12 text-center">
-          <a href="/" className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 hover:text-mighty transition-colors italic">
-            ← Return to Store
+          <a
+            href="/"
+            className="inline-flex items-center gap-3 border border-black/15 px-6 py-4 font-black uppercase text-[10px] tracking-brand text-black hover:border-mighty hover:text-mighty transition-all"
+          >
+            <ArrowLeft size={16} />
+            Return To Store
           </a>
         </div>
-
-      </div>
+      </section>
     </div>
   );
 };
